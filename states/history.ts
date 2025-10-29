@@ -5,7 +5,7 @@ import type { Bookmark } from './watchlist'
 import { isWeb } from '@/lib/utils'
 import { getIndexedDBPlugin } from './indexeddb'
 
-const LIMIT = 1000
+const LIMIT = 500 // Reduced from 1000 to optimize memory usage on low-end devices
 
 interface Store {
   bookmarks: Bookmark[]

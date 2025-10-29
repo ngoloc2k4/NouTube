@@ -42,7 +42,10 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
 
   useEffect(() => {
     if (!ui$.url.get()) {
-      ui$.url.set(isYTMusic ? 'https://music.youtube.com' : isWeb ? 'https://www.youtube.com' : 'https://m.youtube.com')
+      // Always use mobile version for better memory performance on tablets
+      const initialUrl = isYTMusic ? 'https://music.youtube.com' : isWeb ? 'https://www.youtube.com' : 'https://m.youtube.com'
+      console.log('[NouTube] Setting initial URL:', initialUrl)
+      ui$.url.set(initialUrl)
     }
 
     migrateWatchlist()

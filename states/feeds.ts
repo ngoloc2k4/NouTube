@@ -6,7 +6,7 @@ import { isWeb } from '@/lib/utils'
 import { getIndexedDBPlugin } from './indexeddb'
 import { orderBy, sortBy } from 'es-toolkit'
 
-const LIMIT = 1000
+const LIMIT = 500 // Reduced from 1000 to optimize memory usage on low-end devices
 
 interface Feed {
   id: string

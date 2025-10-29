@@ -32,6 +32,7 @@ export const HistoryItem: React.FC<{ bookmark: Bookmark }> = ({ bookmark }) => {
             source={bookmark.thumbnail || getThumbnail(bookmark.url)}
             contentFit="cover"
             placeholder={{ blurhash }}
+            cachePolicy="memory-disk"
             style={{ height: 67.5, borderRadius: 8 }}
           />
         </Pressable>

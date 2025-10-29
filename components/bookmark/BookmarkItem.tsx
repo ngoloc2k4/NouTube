@@ -37,6 +37,7 @@ export const BookmarkItem: React.FC<{ bookmark: Bookmark }> = ({ bookmark }) => 
           source={bookmark.json?.thumbnail || getThumbnail(bookmark.url)}
           contentFit="cover"
           placeholder={{ blurhash }}
+          cachePolicy="memory-disk"
           style={{ height: square ? 48 : 90, borderRadius: round ? 45 : 8 }}
         />
       </Pressable>
