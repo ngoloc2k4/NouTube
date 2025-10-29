@@ -15,13 +15,23 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
+          node-version: '20'
           cache: yarn
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: install and prebuild
         run: |
           yarn install
           yarn bundle:es
           yarn expo prebuild -p android --clean --no-install
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+        working-directory: android
 
       - name: build apk
         run: ./gradlew assembleRelease
