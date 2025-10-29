@@ -37,3 +37,4 @@ modules/*/ios
 *-env.d.ts
 
 desktop/out
+desktop/noutube

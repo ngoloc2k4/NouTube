@@ -23,13 +23,18 @@ jobs:
           java-version: '17'
           cache: 'gradle'
 
-      - name: Install and prebuild
+      - name: install and prebuild
         run: |
           yarn install
           yarn bundle:es
           yarn expo prebuild -p android --clean --no-install
 
       - name: Make gradlew executable
+        run: chmod +x ./gradlew
+        working-directory: android
+
+      - name: build apk
+        run: ./gradlew assembleRelease
         working-directory: android
         run: chmod +x ./gradlew
 
