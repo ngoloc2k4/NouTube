@@ -8,7 +8,6 @@ interface Store {
 
   feedsEnabled: boolean
   hideShorts: boolean
-  keepHistory: boolean
   theme: null | 'dark' | 'light'
 }
 
@@ -18,7 +17,6 @@ export const settings$ = observable<Store>({
 
   feedsEnabled: false, // Disabled by default to reduce memory usage on low-end devices
   hideShorts: true,
-  keepHistory: false, // Disabled by default to reduce memory usage on low-end devices
   theme: null,
 })
 

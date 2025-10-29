@@ -2,8 +2,6 @@ import { ui$ } from '@/states/ui'
 import { onReceiveAuthUrl } from './supabase/auth'
 import { isWeb } from './utils'
 import { settings$ } from '@/states/settings'
-import { getWatchPageBookmark } from './webview'
-import { history$ } from '@/states/history'
 import { debounce } from 'es-toolkit'
 
 const starrableTypes = ['channel', 'playlist', 'podcast', 'shorts', 'watch']
@@ -95,14 +93,4 @@ export const setPageUrl = debounce(async function (url: string) {
   console.log('[NouTube] Page URL changed to:', url)
   console.log('[NouTube] Detected home:', newHome, '(host:', host + ')')
   settings$.home.set(newHome)
-
-  const pageType = getPageType(url)
-  if (settings$.keepHistory.get() && pageType?.type == 'watch') {
-    setTimeout(async () => {
-      const history = await getWatchPageBookmark(url)
-      if (history.url == url) {
-        history$.addBookmark(history)
-      }
-    }, 5000)
-  }
 }, 300)

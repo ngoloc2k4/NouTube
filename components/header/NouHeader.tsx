@@ -58,6 +58,10 @@ export const NouHeader: React.FC<{ noutube: any }> = ({ noutube }) => {
     }
   }
 
+  const onReload = () => {
+    uiState.webview.executeJavaScript('document.location.reload()')
+  }
+
   return (
     <>
       <View className="bg-zinc-800 flex-row lg:flex-col justify-between px-2 py-1 lg:px-1 lg:py-2">
@@ -102,15 +106,15 @@ export const NouHeader: React.FC<{ noutube: any }> = ({ noutube }) => {
               onPress={onToggleStar}
             />,
           )}
+          <MaterialButton
+            name={isYTMusic ? 'video-library' : 'library-music'}
+            onPress={onToggleHome}
+          />
+          <MaterialButton name="refresh" onPress={onReload} />
+          <MaterialButton name="settings" onPress={() => ui$.settingsModalOpen.set(true)} />
           <NouMenu
             trigger={<MaterialButton name="more-vert" />}
-            items={[
-              { label: isYTMusic ? 'YouTube' : 'YouTube Music', handler: onToggleHome },
-              { label: 'History', handler: () => ui$.historyModalOpen.set(true) },
-              { label: 'Reload', handler: () => uiState.webview.executeJavaScript('document.location.reload()') },
-              { label: 'Share', handler: () => share(uiState.pageUrl) },
-              { label: 'Settings', handler: () => ui$.settingsModalOpen.set(true) },
-            ]}
+            items={[{ label: 'Share', handler: () => share(uiState.pageUrl) }]}
           />
         </View>
       </View>

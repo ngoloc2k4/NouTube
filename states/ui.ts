@@ -14,7 +14,6 @@ interface Store {
   bookmarkModalBookmark: Bookmark | undefined
   feedModalOpen: boolean
   folderModalFolder: Folder | undefined
-  historyModalOpen: boolean
   settingsModalOpen: boolean
   queueModalOpen: boolean
   embedVideoId: string
@@ -34,7 +33,6 @@ export const ui$ = observable<Store>({
   bookmarkModalBookmark: undefined,
   feedModalOpen: false,
   folderModalFolder: undefined,
-  historyModalOpen: false,
   settingsModalOpen: false,
   queueModalOpen: false,
   embedVideoId: '',
