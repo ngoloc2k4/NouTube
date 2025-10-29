@@ -9,7 +9,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
@@ -37,12 +36,17 @@ jobs:
       - name: build apk
         run: ./gradlew assembleRelease
         working-directory: android
+        run: chmod +x ./gradlew
 
-      - name: get version code
+      - name: Build APK
+        working-directory: android
+        run: ./gradlew assembleRelease
+
+      - name: Get version code
         run: echo "VERSION_CODE=$(jq -r '.versionCode' package.json)" >> $GITHUB_ENV
 
       - uses: softprops/action-gh-release@v2
-        name: upload apk
+        name: Upload APK
         with:
           body_path: metadata/en-US/changelogs/${{ env.VERSION_CODE }}04.txt
           files: android/app/build/outputs/apk/release/*-unsigned.apk
