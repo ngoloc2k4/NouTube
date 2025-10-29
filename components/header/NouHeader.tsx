@@ -40,10 +40,13 @@ export const NouHeader: React.FC<{ noutube: any }> = ({ noutube }) => {
   const pageType = getPageType(uiState.pageUrl)
 
   const onToggleHome = () => {
+    // Always use mobile version for YouTube Music for better performance
     let newUrl = 'https://music.youtube.com'
     if (isYTMusic) {
       newUrl = isWeb ? 'https://www.youtube.com' : 'https://m.youtube.com'
     }
+    console.log('[NouTube] Switching from', isYTMusic ? 'YouTube Music' : 'YouTube', 'to', isYTMusic ? 'YouTube' : 'YouTube Music')
+    console.log('[NouTube] New URL:', newUrl)
     updateUrl(newUrl)
   }
 

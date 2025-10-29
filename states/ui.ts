@@ -46,11 +46,14 @@ export const ui$ = observable<Store>({
 })
 
 export function updateUrl(url: string) {
+  console.log('[NouTube] updateUrl called with:', url)
   const webview = ui$.webview.get()
   // workaround for beforeunload https://github.com/electron/electron/issues/43314#issuecomment-2399072938
   webview?.executeJavaScript('NouTube.pause()')
   ui$.url.set('')
-  ui$.url.set(unnormalizeUrl(url))
+  const finalUrl = unnormalizeUrl(url)
+  console.log('[NouTube] Setting URL to:', finalUrl)
+  ui$.url.set(finalUrl)
 }
 
 export const onClearData$ = event()

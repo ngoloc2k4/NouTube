@@ -50,6 +50,14 @@ class NouWebView @JvmOverloads constructor(context: Context, attrs: AttributeSet
       supportZoom()
       builtInZoomControls = true
       displayZoomControls = false
+      
+      // Memory optimization for low-end devices
+      setRenderPriority(android.webkit.WebSettings.RenderPriority.HIGH)
+      
+      // Reduce memory usage
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+        setLayerType(android.view.View.LAYER_TYPE_HARDWARE, null)
+      }
     }
     CookieManager.getInstance().setAcceptCookie(true)
 

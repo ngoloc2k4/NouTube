@@ -91,7 +91,10 @@ export const setPageUrl = debounce(async function (url: string) {
   }
   ui$.pageUrl.set(url)
   const { host } = new URL(url)
-  settings$.home.set(host == 'music.youtube.com' ? 'yt-music' : 'yt')
+  const newHome = host == 'music.youtube.com' ? 'yt-music' : 'yt'
+  console.log('[NouTube] Page URL changed to:', url)
+  console.log('[NouTube] Detected home:', newHome, '(host:', host + ')')
+  settings$.home.set(newHome)
 
   const pageType = getPageType(url)
   if (settings$.keepHistory.get() && pageType?.type == 'watch') {

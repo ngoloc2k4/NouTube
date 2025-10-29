@@ -16,9 +16,9 @@ export const settings$ = observable<Store>({
   home: 'yt',
   isYTMusic: (): boolean => settings$.home.get() == 'yt-music',
 
-  feedsEnabled: true,
+  feedsEnabled: false, // Disabled by default to reduce memory usage on low-end devices
   hideShorts: true,
-  keepHistory: true,
+  keepHistory: false, // Disabled by default to reduce memory usage on low-end devices
   theme: null,
 })
 
