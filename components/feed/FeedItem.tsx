@@ -43,6 +43,7 @@ export const FeedItem: React.FC<{ bookmark: Bookmark }> = ({ bookmark }) => {
             source={channel.json?.thumbnail}
             contentFit="cover"
             placeholder={{ blurhash }}
+            cachePolicy="memory-disk"
             style={{ height: 28, borderRadius: 18 }}
           />
         </View>
@@ -56,6 +57,7 @@ export const FeedItem: React.FC<{ bookmark: Bookmark }> = ({ bookmark }) => {
               source={bookmark.json.thumbnail || getThumbnail(bookmark.url)}
               contentFit="cover"
               placeholder={{ blurhash }}
+              cachePolicy="memory-disk"
               style={{ height: 67.5, borderRadius: 8 }}
             />
           </Pressable>
