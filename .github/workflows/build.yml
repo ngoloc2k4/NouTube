@@ -9,29 +9,39 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
+          node-version: '20'
           cache: yarn
 
-      - name: install and prebuild
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Install and prebuild
         run: |
           yarn install
           yarn bundle:es
           yarn expo prebuild -p android --clean --no-install
 
-      - name: build apk
-        run: ./gradlew assembleRelease
+      - name: Make gradlew executable
         working-directory: android
+        run: chmod +x ./gradlew
 
-      - name: get version code
+      - name: Build APK
+        working-directory: android
+        run: ./gradlew assembleRelease
+
+      - name: Get version code
         run: echo "VERSION_CODE=$(jq -r '.versionCode' package.json)" >> $GITHUB_ENV
 
       - uses: softprops/action-gh-release@v2
-        name: upload apk
+        name: Upload APK
         with:
           body_path: metadata/en-US/changelogs/${{ env.VERSION_CODE }}04.txt
           files: android/app/build/outputs/apk/release/*-unsigned.apk
