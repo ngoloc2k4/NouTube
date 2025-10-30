@@ -24,7 +24,7 @@ jobs:
           yarn install
           yarn bundle:es
           yarn expo prebuild -p android --clean --no-install
-        # Note: Only builds for arm64-v8a architecture as configured in plugins/withAndroidPlugin.ts
+        # Note: Only builds for arm64-v8a architecture as configured in plugins/withAndroidPlugin.ts and android/app/build.gradle
 
       # ---------------------- BUILD DEBUG ----------------------
       - name: Build Debug APK
