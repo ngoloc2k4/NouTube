@@ -1,4 +1,4 @@
-name: Build Debug & Unsigned Release APK
+name: Build arm64-v8a Debug APK
 
 on:
   push:
@@ -26,7 +26,6 @@ jobs:
           yarn expo prebuild -p android --clean --no-install
         # Note: Only builds for arm64-v8a architecture as configured in plugins/withAndroidPlugin.ts and android/app/build.gradle
 
-      # ---------------------- BUILD DEBUG ----------------------
       - name: Build Debug APK
         run: ./gradlew assembleDebug
         working-directory: android
@@ -39,17 +38,3 @@ jobs:
         with:
           name: app-debug-arm64-v8a
           path: android/app/build/outputs/apk/debug/*.apk
-
-      # ---------------------- BUILD RELEASE ----------------------
-      - name: Build Unsigned Release APK
-        run: ./gradlew assembleRelease
-        working-directory: android
-
-      - name: List Release APK
-        run: ls -lh android/app/build/outputs/apk/release/
-
-      - name: Upload Unsigned Release APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release-unsigned-arm64-v8a
-          path: android/app/build/outputs/apk/release/*.apk
