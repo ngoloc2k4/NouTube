@@ -1,0 +1,40 @@
+name: Build arm64-v8a Debug APK
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: yarn
+
+      - name: Install dependencies and prebuild Expo
+        run: |
+          yarn install
+          yarn bundle:es
+          yarn expo prebuild -p android --clean --no-install
+        # Note: Only builds for arm64-v8a architecture as configured in plugins/withAndroidPlugin.ts and android/app/build.gradle
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+        working-directory: android
+
+      - name: List Debug APK
+        run: ls -lh android/app/build/outputs/apk/debug/
+
+      - name: Upload Debug APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-arm64-v8a
+          path: android/app/build/outputs/apk/debug/*.apk
