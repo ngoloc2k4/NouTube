@@ -1,9 +1,9 @@
-name: Build APK
+name: Build Unsigned APK
 
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -11,51 +11,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           cache: yarn
 
-      - name: install and prebuild
+      - name: Install dependencies and prebuild Expo
         run: |
           yarn install
           yarn bundle:es
           yarn expo prebuild -p android --clean --no-install
 
-      - name: build apk
+      - name: Build unsigned release APK
         run: ./gradlew assembleRelease
         working-directory: android
 
-      # https://github.com/r0adkll/sign-android-release/issues/84#issuecomment-1889636075
-      - name: set build tool version
-        shell: bash
-        run: |
-          BUILD_TOOL_VERSION=$(ls /usr/local/lib/android/sdk/build-tools/ | tail -n 1)
-          echo "BUILD_TOOL_VERSION=$BUILD_TOOL_VERSION" >> $GITHUB_ENV
-          echo build tool version: $BUILD_TOOL_VERSION
-          echo "VERSION_CODE=$(jq -r '.versionCode' package.json)" >> $GITHUB_ENV
+      - name: Show output APK path
+        run: ls -lh android/app/build/outputs/apk/release/
 
-      - uses: r0adkll/sign-android-release@v1
-        name: sign apk
-        id: sign_apk
+      - name: Upload unsigned APK artifact
+        uses: actions/upload-artifact@v4
         with:
-          releaseDirectory: android/app/build/outputs/apk/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-        env:
-          BUILD_TOOLS_VERSION: ${{ env.BUILD_TOOL_VERSION }}
-
-      - name: rename apk
-        run: |
-          sudo apt-get update && sudo apt-get install -y rename
-          rename 's/release-unsigned-signed/release/' *.apk
-        working-directory: android/app/build/outputs/apk/release
-
-      - uses: softprops/action-gh-release@v2
-        name: upload apk
-        with:
-          body_path: metadata/en-US/changelogs/${{ env.VERSION_CODE }}04.txt
-          files: android/app/build/outputs/apk/release/*-release.apk
+          name: app-release-unsigned
+          path: android/app/build/outputs/apk/release/*.apk
