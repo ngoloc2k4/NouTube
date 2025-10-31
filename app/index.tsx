@@ -18,6 +18,9 @@ SplashScreen.preventAutoHideAsync().catch(() => {
   // Ignore errors if splash screen is already hidden
 })
 
+// Timeout duration for script loading (30 seconds)
+const SCRIPT_LOAD_TIMEOUT_MS = 30000
+
 export default function HomeScreen() {
   const [scriptOnStart, setScriptOnStart] = useState('')
   const [scriptError, setScriptError] = useState(false)
@@ -31,13 +34,13 @@ export default function HomeScreen() {
   }, [hasShareIntent, shareIntent])
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout
+    let timeoutId: NodeJS.Timeout | undefined
 
     ;(async () => {
       try {
         // Set a timeout to prevent indefinite loading
         const timeoutPromise = new Promise<never>((_, reject) => {
-          timeoutId = setTimeout(() => reject(new Error('Script loading timeout')), 30000)
+          timeoutId = setTimeout(() => reject(new Error('Script loading timeout')), SCRIPT_LOAD_TIMEOUT_MS)
         })
 
         const loadPromise = (async () => {
@@ -70,7 +73,9 @@ export default function HomeScreen() {
     })
 
     return () => {
-      clearTimeout(timeoutId)
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
       subscription.remove()
     }
   }, [])
@@ -92,7 +97,7 @@ export default function HomeScreen() {
       <View className="flex-1 items-center justify-center bg-zinc-900 px-8">
         <Text className="text-white text-xl font-bold mb-4">Failed to Load NouTube</Text>
         <Text className="text-zinc-400 text-center mb-6">
-          The app script could not be loaded. Please ensure the app was built correctly with &apos;npm run bundle&apos;.
+          The app script could not be loaded. Please ensure the app was built correctly.
         </Text>
         <Text className="text-zinc-500 text-sm text-center">
           Try reinstalling the app or contact support if the issue persists.
