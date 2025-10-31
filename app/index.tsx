@@ -37,13 +37,20 @@ export default function HomeScreen() {
   useEffect(() => {
     let scriptTimeoutId: NodeJS.Timeout | undefined
     let splashTimeoutId: NodeJS.Timeout | undefined
+    let splashHidden = false
 
-    // Hide splash screen after maximum timeout to prevent ANR
-    splashTimeoutId = setTimeout(async () => {
+    const hideSplashScreen = async () => {
+      if (splashHidden) return
+      splashHidden = true
       await SplashScreen.hideAsync().catch(() => {
         // Ignore errors if splash screen is already hidden
       })
+    }
+
+    // Hide splash screen after maximum timeout to prevent ANR
+    splashTimeoutId = setTimeout(async () => {
       console.log('[NouTube] Splash screen hidden after timeout')
+      await hideSplashScreen()
     }, SPLASH_SCREEN_TIMEOUT_MS)
 
     ;(async () => {
@@ -74,9 +81,7 @@ export default function HomeScreen() {
         clearTimeout(scriptTimeoutId)
         clearTimeout(splashTimeoutId)
         // Hide splash screen once loading is complete (success or failure)
-        await SplashScreen.hideAsync().catch(() => {
-          // Ignore errors if splash screen is already hidden
-        })
+        await hideSplashScreen()
       }
     })()
 
