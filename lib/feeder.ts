@@ -1,5 +1,5 @@
 import { syncState, when } from '@legendapp/state'
-import { bookmarks$, newBookmark , Bookmark } from '@/states/bookmarks'
+import { bookmarks$, newBookmark, Bookmark } from '@/states/bookmarks'
 import { getPageType } from './page'
 import { XMLParser } from 'fast-xml-parser'
 import { mainClient } from '../desktop/src/renderer/ipc/main'
