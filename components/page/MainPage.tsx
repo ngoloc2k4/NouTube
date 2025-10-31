@@ -25,7 +25,17 @@ export const MainPage: React.FC<{ contentJs: string }> = ({ contentJs }) => {
       })
     })
 
-    feederLoop()
+    // Defer feederLoop to avoid blocking main thread on startup
+    // Use setTimeout to push it to the next event loop tick
+    const feedTimer = setTimeout(() => {
+      feederLoop().catch((error) => {
+        console.error('[NouTube] feederLoop error:', error)
+      })
+    }, 1000) // Delay by 1 second to allow UI to settle
+
+    return () => {
+      clearTimeout(feedTimer)
+    }
   }, [])
 
   return (

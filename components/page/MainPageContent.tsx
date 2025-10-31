@@ -42,13 +42,21 @@ export const MainPageContent: React.FC<{ contentJs: string }> = ({ contentJs }) 
 
   useEffect(() => {
     if (!ui$.url.get()) {
-      // Always use mobile version for better memory performance on tablets
-      const initialUrl = isYTMusic ? 'https://music.youtube.com' : isWeb ? 'https://www.youtube.com' : 'https://m.youtube.com'
-      console.log('[NouTube] Setting initial URL:', initialUrl)
-      ui$.url.set(initialUrl)
+      // Defer initial URL setting to avoid blocking main thread
+      setTimeout(() => {
+        // Always use mobile version for better memory performance on tablets
+        const initialUrl = isYTMusic ? 'https://music.youtube.com' : isWeb ? 'https://www.youtube.com' : 'https://m.youtube.com'
+        console.log('[NouTube] Setting initial URL:', initialUrl)
+        ui$.url.set(initialUrl)
+      }, 100)
     }
 
-    migrateWatchlist()
+    // Defer watchlist migration to avoid blocking main thread on startup
+    setTimeout(() => {
+      migrateWatchlist().catch((error) => {
+        console.error('[NouTube] Watchlist migration error:', error)
+      })
+    }, 500)
   }, [])
 
   useEffect(() => {

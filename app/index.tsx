@@ -25,14 +25,21 @@ export default function HomeScreen() {
   const [scriptOnStart, setScriptOnStart] = useState('')
   const [scriptError, setScriptError] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isReady, setIsReady] = useState(false)
   const { hasShareIntent, shareIntent } = useShareIntent()
 
+  // Handle share intent only after app is ready to avoid ANR
   useEffect(() => {
+    if (!isReady) return
+    
     const url = shareIntent.webUrl || shareIntent.text
     if (hasShareIntent && url) {
-      openSharedUrl(url)
+      // Defer share intent handling to avoid blocking main thread
+      setTimeout(() => {
+        openSharedUrl(url)
+      }, 100)
     }
-  }, [hasShareIntent, shareIntent])
+  }, [hasShareIntent, shareIntent, isReady])
 
   useEffect(() => {
     let scriptTimeoutId: NodeJS.Timeout | undefined
@@ -73,6 +80,8 @@ export default function HomeScreen() {
         const content = await Promise.race([loadPromise, timeoutPromise])
         setScriptOnStart(content)
         console.log('[NouTube] Script loaded successfully')
+        // Mark app as ready after script loads successfully
+        setIsReady(true)
       } catch (error) {
         console.error('[NouTube] Failed to load script:', error)
         setScriptError(true)
